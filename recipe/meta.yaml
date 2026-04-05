@@ -1,5 +1,5 @@
 {% set name = "implot" %}
-{% set version = "0.17" %}
+{% set version = "1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +7,11 @@ package:
 
 source:
   - url: https://github.com/epezent/{{ name }}/archive/v{{ version }}.tar.gz
-    sha256: 0aa3ff4fb97e553608e6758e77980eedf01745628fe6c025e647f941ae674127
+    sha256: e4a9db64eef7bcc604e2a5ea380af124eb97aa3e8a6a96330079c88add0f7e93
   - path: CMakeLists.txt
 
 build:
-  number: 1
+  number: 0
   run_exports:
     - {{ pin_subpackage('implot', max_pin='x.x') }}
 
