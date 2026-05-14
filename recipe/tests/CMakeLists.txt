@@ -11,3 +11,6 @@ find_package(implot CONFIG REQUIRED)
 
 add_executable(implot_test main.cpp)
 target_link_libraries(implot_test PRIVATE imgui::imgui implot::implot)
+
+enable_testing()
+add_test(NAME implot_test COMMAND implot_test)
