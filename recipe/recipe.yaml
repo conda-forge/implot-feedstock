@@ -1,0 +1,76 @@
+context:
+  name: implot
+  version: "1.0"
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  - url: https://github.com/epezent/${{ name }}/archive/v${{ version }}.tar.gz
+    sha256: e4a9db64eef7bcc604e2a5ea380af124eb97aa3e8a6a96330079c88add0f7e93
+  - path: CMakeLists.txt
+
+build:
+  number: 1
+  script:
+    - if: win
+      then: call "%RECIPE_DIR%\\build.bat"
+    - if: unix
+      then: bash "${RECIPE_DIR}/build.sh"
+
+requirements:
+  build:
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib('c') }}
+    - cmake
+    - if: not win
+      then: ninja
+  host:
+    - imgui
+    - libvulkan-headers
+  run:
+    - imgui
+    - libvulkan-headers
+  run_exports:
+    - ${{ pin_subpackage('implot', upper_bound='x.x') }}
+
+tests:
+  - requirements:
+      run:
+        - ${{ compiler('c') }}
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib('c') }}
+        - cmake
+        - if: not win
+          then: ninja
+    files:
+      recipe:
+        - run_test.bat
+        - run_test.sh
+        - tests/
+    script:
+      - if: not win
+        then:
+          - test -f "${PREFIX}/include/implot.h"
+          - test -f "${PREFIX}/lib/libimplot${SHLIB_EXT}"
+          - test -f "${PREFIX}/share/implot/implot-config.cmake"
+          - bash "run_test.sh"
+      - if: win
+        then:
+          - if not exist "%PREFIX%\\Library\\include\\implot.h" exit 1
+          - if not exist "%PREFIX%\\Library\\lib\\implot.lib" exit 1
+          - if not exist "%PREFIX%\\Library\\bin\\implot.dll" exit 1
+          - if not exist "%PREFIX%\\Library\\share\\implot\\implot-config.cmake" exit 1
+          - call "run_test.bat"
+
+about:
+  homepage: https://github.com/epezent/implot
+  repository: https://github.com/epezent/implot
+  summary: Immediate Mode Plotting
+  license: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - jeongseok-meta
