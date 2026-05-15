@@ -9,6 +9,8 @@ Package license: MIT
 
 Summary: Immediate Mode Plotting
 
+Development: https://github.com/epezent/implot
+
 Current build status
 ====================
 
